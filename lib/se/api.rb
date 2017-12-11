@@ -21,7 +21,7 @@ module SE
 
       def posts(ids = "", **params)
         return if ids == ""
-        json("posts/#{Array(ids).join(';')}").map do |i|
+        json("posts/#{Array(ids).join(';')}", **params).map do |i|
           Post.new(i)
         end
       end
