@@ -19,7 +19,8 @@ module SE
         @quota = nil
       end
 
-      def posts(ids, **params)
+      def posts(ids = "", **params)
+        return if ids == ""
         json("posts/#{Array(ids).join(';')}").map do |i|
           Post.new(i)
         end
@@ -27,7 +28,8 @@ module SE
 
       private
 
-      def json(uri, **params)
+      def json(uri, site: nil, **params)
+        throw "No site specified" if site.nil?
         params = @params.merge(params).merge({key: @key}).map { |k,v| "#{k}=#{v}" }.join('&')
         resp_raw  = Net::HTTP.get_response(URI("https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}")).body
         resp = JSON.parse(resp_raw)
