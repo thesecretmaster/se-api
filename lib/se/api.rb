@@ -10,13 +10,14 @@ module SE
     class Client
       API_VERSION = 2.2
 
-      attr_reader :quota
+      attr_reader :quota, :quota_used
       attr_accessor :params
 
       def initialize(key, **params)
         @key = key
         @params = params
         @quota = nil
+        @quota_used = 0
       end
 
       def posts(ids = "", **params)
@@ -28,12 +29,14 @@ module SE
 
       private
 
-      def json(uri, site: nil, **params)
-        throw "No site specified" if site.nil?
+      def json(uri, **params)
+        throw "No site specified" if params[:site].nil?
         params = @params.merge(params).merge({key: @key}).map { |k,v| "#{k}=#{v}" }.join('&')
+        puts "Posting to https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}"
         resp_raw  = Net::HTTP.get_response(URI("https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}")).body
         resp = JSON.parse(resp_raw)
         @quota = resp["quota_remaining"]
+        @quota_used += 1
         resp["items"]
       end
     end
