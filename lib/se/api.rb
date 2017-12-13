@@ -18,7 +18,7 @@ module SE
         @params = params
         @quota = nil
         @quota_used = 0
-        @backoff = Datetime.now
+        @backoff = DateTime.now
         @logger_raw = Logger.new 'api_raw.log'
         @logger_json = Logger.new 'api_json.log'
       end
@@ -34,7 +34,7 @@ module SE
 
       def json(uri, **params)
         throw "No site specified" if params[:site].nil?
-        backoff_for = ((@backoff - Datetime.now) * 24 * 60 * 60)
+        backoff_for = ((@backoff - DateTime.now) * 24 * 60 * 60)
         backoff_for = 0 if backoff_for <= 0
         if backoff_for > 0
           puts "Backing off for #{backoff_for}"
@@ -46,7 +46,7 @@ module SE
         resp_raw  = Net::HTTP.get_response(URI("https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}")).body
         @logger_raw.info "https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params} => #{resp_raw}"
         resp = JSON.parse(resp_raw)
-        @backoff = Datetime.now + (resp["backoff"].to_i/(24*60*60))
+        @backoff = DateTime.now + (resp["backoff"].to_i/(24*60*60))
         @logger_json.info "https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params} => #{resp}"
         @quota = resp["quota_remaining"]
         @quota_used += 1
