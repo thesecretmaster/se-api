@@ -59,7 +59,12 @@ module SE
         end
         params = @params.merge(params).merge({key: @key}).map { |k,v| "#{k}=#{v}" }.join('&')
         puts "Posting to https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}"
-        resp_raw  = Net::HTTP.get_response(URI("https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}")).body
+        begin
+          resp_raw  = Net::HTTP.get_response(URI("https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}")).body
+        rescue Net::OpenTimeout
+          puts "Got timeout on API request. Retrying..."
+          retry
+        end
         @logger_raw.info "https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params} => #{resp_raw}"
         resp = JSON.parse(resp_raw)
         @backoff = DateTime.now + (resp["backoff"].to_i/(24*60*60))
