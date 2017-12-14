@@ -1,5 +1,7 @@
 require "se/api/version"
 require "se/api/types/post"
+require "se/api/types/answer"
+require "se/api/types/question"
 
 require "net/http"
 require "json"
@@ -27,6 +29,20 @@ module SE
         return if ids == ""
         json("posts/#{Array(ids).join(';')}", **params).map do |i|
           Post.new(i)
+        end
+      end
+
+      def questions(ids = "", **params)
+        return if ids == ""
+        json("questions/#{Array(ids).join(';')}", **params).map do |i|
+          Question.new(i)
+        end
+      end
+
+      def answers(ids = "", **params)
+        return if ids = ""
+        json("answers/#{Array(ids).join(';')}", **params).map do |i|
+          Answer.new(i)
         end
       end
 
