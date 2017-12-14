@@ -5,7 +5,7 @@ module SE
       
       def initialize(item_json)
         super(item_json)
-        @answers = item_json["answers"].map { |i| Answer.new(i) }
+        @answers = Array(item_json["answers"]).map { |i| Answer.new(i) }
       end
     end
   end
