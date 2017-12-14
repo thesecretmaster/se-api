@@ -40,7 +40,7 @@ module SE
       end
 
       def answers(ids = "", **params)
-        return if ids = ""
+        return if ids == ""
         json("answers/#{Array(ids).join(';')}", **params).map do |i|
           Answer.new(i)
         end
