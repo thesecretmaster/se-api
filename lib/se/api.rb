@@ -17,7 +17,7 @@ module SE
 
       def initialize(key, **params)
         @key = key
-        @params = params
+        @params = params.merge({filter: '!WrkIOxkAhJs(wAFMz1A48Ufh_crABCW-PeZU*2b'})
         @quota = nil
         @quota_used = 0
         @backoff = DateTime.now
