@@ -6,6 +6,7 @@ require "se/api/types/question"
 require "net/http"
 require "json"
 require "uri"
+require "time"
 
 module SE
   module API
@@ -20,7 +21,7 @@ module SE
         @params = params.merge({filter: '!*1_).BnZb8pdvWlZpJYNyauMekouxK9-RzUNUrwiB'})
         @quota = nil
         @quota_used = 0
-        @backoff = DateTime.now
+        @backoff = Time.now
         @logger_raw = Logger.new 'api_raw.log'
         @logger_json = Logger.new 'api_json.log'
       end
@@ -50,7 +51,7 @@ module SE
 
       def json(uri, **params)
         throw "No site specified" if params[:site].nil?
-        backoff_for = ((@backoff - DateTime.now) * 24 * 60 * 60)
+        backoff_for = @backoff-Time.now
         backoff_for = 0 if backoff_for <= 0
         if backoff_for > 0
           puts "Backing off for #{backoff_for}"
@@ -67,7 +68,7 @@ module SE
         end
         @logger_raw.info "https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params} => #{resp_raw}"
         resp = JSON.parse(resp_raw)
-        @backoff = DateTime.now + (resp["backoff"].to_i/(24*60*60))
+        @backoff = Time.now + resp["backoff"].to_i
         @logger_json.info "https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params} => #{resp}"
         @quota = resp["quota_remaining"]
         @quota_used += 1
