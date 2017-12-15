@@ -62,8 +62,9 @@ module SE
         puts "Posting to https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}"
         begin
           resp_raw  = Net::HTTP.get_response(URI("https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params}")).body
-        rescue Net::OpenTimeout
-          puts "Got timeout on API request. Retrying..."
+        rescue Net::OpenTimeout, SocketError => e
+          puts "Got timeout on API request (#{e}). Retrying..."
+          sleep 0.3
           retry
         end
         @logger_raw.info "https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params} => #{resp_raw}"
