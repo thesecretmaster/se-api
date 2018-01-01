@@ -12,7 +12,7 @@ module SE
         @score = item_json["score"].to_i
         @type = item_json["post_type"]
         @id = item_json["comment_id"].to_i
-        @created_at = item_json["creation"]
+        @created_at = item_json["creation_date"]
         #@author = User.new(item_json["owner"])
       end
     end
