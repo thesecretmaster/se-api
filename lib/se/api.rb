@@ -2,11 +2,13 @@ require "se/api/version"
 require "se/api/types/post"
 require "se/api/types/answer"
 require "se/api/types/question"
+require "se/api/types/comment"
 
 require "net/http"
 require "json"
 require "uri"
 require "time"
+require "logger"
 
 module SE
   module API
@@ -16,7 +18,7 @@ module SE
       attr_reader :quota, :quota_used
       attr_accessor :params
 
-      def initialize(key, **params)
+      def initialize(key = "", **params)
         @key = key
         @params = params.merge({filter: '!*1_).BnZb8pdvWlZpJYNyauMekouxK9-RzUNUrwiB'})
         @quota = nil
@@ -47,9 +49,16 @@ module SE
         end
       end
 
+      def comments(ids = "", **params)
+        json("comments/#{Array(ids).join(';')}", **params).map do |i|
+          Comment.new(i)
+        end
+      end
+
       private
 
       def json(uri, **params)
+        params = @params.merge(params)
         throw "No site specified" if params[:site].nil?
         backoff_for = @backoff-Time.now
         backoff_for = 0 if backoff_for <= 0
