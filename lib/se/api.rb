@@ -1,8 +1,9 @@
 require "se/api/version"
-require "se/api/types/post"
 require "se/api/types/answer"
 require "se/api/types/question"
 require "se/api/types/comment"
+require "se/api/types/user"
+require "se/api/types/post"
 
 require "net/http"
 require "json"
@@ -28,34 +29,55 @@ module SE
         @logger_json = Logger.new 'api_json.log'
       end
 
-      def posts(ids = "", **params)
-        return if ids == ""
-        json("posts/#{Array(ids).join(';')}", **params).map do |i|
-          Post.new(i)
-        end
+      def posts(*ids, **params)
+        objectify Post, ids, **params
       end
 
-      def questions(ids = "", **params)
-        return if ids == ""
-        json("questions/#{Array(ids).join(';')}", **params).map do |i|
-          Question.new(i)
-        end
+      def post(id, **params)
+        posts(id, **params).first
       end
 
-      def answers(ids = "", **params)
-        return if ids == ""
-        json("answers/#{Array(ids).join(';')}", **params).map do |i|
-          Answer.new(i)
-        end
+      def questions(*ids, **params)
+        objectify Question, ids, **params
       end
 
-      def comments(ids = "", **params)
-        json("comments/#{Array(ids).join(';')}", **params).map do |i|
-          Comment.new(i)
-        end
+      def question(id, **params)
+        questions(id, **params).first
+      end
+
+      def answers(*ids, **params)
+        objectify Answer, ids, **params
+      end
+
+      def answer(id, **params)
+        answers(id, **params).first
+      end
+
+      def comments(*ids, **params)
+        objectify Comment, ids, **params
+      end
+
+      def comment(id, **params)
+        comments(id, **params).first
+      end
+
+      def users(*ids, **params)
+        objectify User, ids, **params
+      end
+
+      def user(id, **params)
+        users(id, **params).first
       end
 
       private
+
+      def objectify(type, ids = "", uri: nil, **params)
+        return if ids == ""
+        uri = "#{type.to_s.split('::').last.downcase}s" if uri.nil?
+        json("#{uri}/#{Array(ids).join(';')}", **params).map do |i|
+          type.new(i)
+        end
+      end
 
       def json(uri, **params)
         params = @params.merge(params)

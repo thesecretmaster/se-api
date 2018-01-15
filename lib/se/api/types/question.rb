@@ -1,3 +1,5 @@
+require "se/api/types/post"
+
 module SE
   module API
     class Question < Post

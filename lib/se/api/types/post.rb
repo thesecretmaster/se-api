@@ -1,3 +1,5 @@
+require "se/api/types/user"
+
 module SE
   module API
     class Post
@@ -14,9 +16,11 @@ module SE
         @id = (@json["post_id"] || @json["answer_id"] || @json["question_id"]).to_i
         @updated_at = @json["last_activity_date"]
         @created_at = @json["creation_date"]
-        @last_activity_date = @updated_at
-        # @author = User.new(item_json["author"])
+        @author = User.new(@json["owner"])
       end
+
+      alias_method :last_activity_date, :updated_at
+      alias_method :user, :author
     end
   end
 end

@@ -1,3 +1,5 @@
+require "se/api/types/user"
+
 module SE
   module API
     class Comment
@@ -13,8 +15,10 @@ module SE
         @type = item_json["post_type"]
         @id = item_json["comment_id"].to_i
         @created_at = item_json["creation_date"]
-        #@author = User.new(item_json["owner"])
+        @author = User.new(item_json["owner"])
       end
+
+      alias_method :user, :author
     end
   end
 end
