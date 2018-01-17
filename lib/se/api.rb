@@ -104,7 +104,7 @@ module SE
         @logger_json.info "https://api.stackexchange.com/#{API_VERSION}/#{uri}?#{params} => #{resp}"
         @quota = resp["quota_remaining"]
         @quota_used += 1
-        resp["items"]
+        Array(resp["items"])
       end
     end
   end
