@@ -3,7 +3,7 @@ require "se/api/types/user"
 module SE
   module API
     class Comment
-      attr_reader :body, :link, :id, :post_id, :score, :type, :created_at, :author, :body_markdown
+      attr_reader :body, :link, :id, :post_id, :score, :type, :created_at, :author, :body_markdown, :edited
       attr_reader :json
 
       def initialize(item_json)
