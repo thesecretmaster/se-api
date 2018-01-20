@@ -22,6 +22,7 @@ module SE
       alias_method :user, :author
       alias_method :owner, :author
       alias_method :comment_id, :id
+      alias_method :creation_date, :created_at
     end
   end
 end
