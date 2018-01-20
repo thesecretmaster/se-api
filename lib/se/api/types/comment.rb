@@ -19,6 +19,7 @@ module SE
       end
 
       alias_method :user, :author
+      alias_method :owner, :author
     end
   end
 end
