@@ -7,7 +7,7 @@ module SE
       attr_reader :json
 
       def initialize(item_json)
-        @json = item_json
+        @json = Hash(item_json)
         @body = @json["body"]
         @body_markdown = @json["body_markdown"]
         @link = @json["link"]
