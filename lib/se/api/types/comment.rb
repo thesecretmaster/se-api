@@ -3,12 +3,13 @@ require "se/api/types/user"
 module SE
   module API
     class Comment
-      attr_reader :body, :link, :id, :post_id, :score, :type, :created_at, :author
+      attr_reader :body, :link, :id, :post_id, :score, :type, :created_at, :author, :body_markdown
       attr_reader :json
 
       def initialize(item_json)
         @json = item_json
         @body = item_json["body"]
+        @body_markdown = item_json["body_markdown"]
         @link = item_json["link"]
         @post_id = item_json["post_id"].to_i
         @score = item_json["score"].to_i
