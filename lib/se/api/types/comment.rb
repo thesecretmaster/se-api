@@ -21,6 +21,7 @@ module SE
 
       alias_method :user, :author
       alias_method :owner, :author
+      alias_method :comment_id, :id
     end
   end
 end
