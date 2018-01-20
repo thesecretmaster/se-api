@@ -11,6 +11,7 @@ module SE
         @body = @json["body"]
         @body_markdown = @json["body_markdown"]
         @link = @json["link"]
+        @edited = (@json["edited"] == "true")
         @post_id = @json["post_id"].to_i
         @score = @json["score"].to_i
         @type = @json["post_type"]
