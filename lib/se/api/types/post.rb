@@ -22,6 +22,7 @@ module SE
 
       alias_method :last_activity_date, :updated_at
       alias_method :user, :author
+      alias_method :owner, :author
     end
   end
 end
