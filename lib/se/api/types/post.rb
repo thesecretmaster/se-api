@@ -14,7 +14,7 @@ module SE
         @score = @json["score"].to_i
         @type = @json["post_type"]
         @last_editor = User.new(@json["last_editor"])
-        @comments = @json["comments"].map { |c| Comment.new(c) }
+        @comments = Array(@json["comments"]&.map { |c| Comment.new(c) })
         @id = (@json["post_id"] || @json["answer_id"] || @json["question_id"]).to_i
         @updated_at = @json["last_activity_date"]
         @created_at = @json["creation_date"]
