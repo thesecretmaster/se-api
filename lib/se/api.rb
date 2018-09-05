@@ -4,6 +4,7 @@ require "se/api/types/question"
 require "se/api/types/comment"
 require "se/api/types/user"
 require "se/api/types/post"
+require "se/api/types/tag"
 
 require "net/http"
 require "json"
@@ -73,12 +74,20 @@ module SE
         users(id, **params).first
       end
 
+      def tags(*names, query_type: 'info', **params)
+        objectify Tag, names, **params.merge({uri_suffix: query_type, delimiter: ','})
+      end
+
+      def tag(name, **params)
+        tags(name, **params).first
+      end
+
       private
 
-      def objectify(type, ids = "", uri: nil, **params)
+      def objectify(type, ids = "", uri_prefix: nil, uri_suffix: nil, uri: nil, delimiter: ';', **params)
         return if ids == ""
-        uri = "#{type.to_s.split('::').last.downcase}s" if uri.nil?
-        json("#{uri}/#{Array(ids).join(';')}", **params).map do |i|
+        uri_prefix = "#{type.to_s.split('::').last.downcase}s" if uri_prefix.nil?
+        json([uri_prefix, Array(ids).join(delimiter), uri_suffix].reject(&:nil?).join('/'), **params).map do |i|
           type.new(i)
         end
       end
