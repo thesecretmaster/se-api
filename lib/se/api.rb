@@ -75,7 +75,7 @@ module SE
       end
 
       def tags(*names, query_type: 'info', **params)
-        objectify Tag, names, **params.merge({uri_suffix: query_type, delimiter: ','})
+        objectify Tag, names, **params.merge({uri_suffix: query_type})
       end
 
       def tag(name, **params)
