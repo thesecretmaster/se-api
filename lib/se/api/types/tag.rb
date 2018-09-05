@@ -5,7 +5,7 @@ module SE
 
       def initialize(item_json)
         @json = Hash(item_json)
-        @count = @json['count']
+        @count = @json['count'].to_i
         @synonyms = Array(@json['synonyms'])
         @name = @json['name']
       end
